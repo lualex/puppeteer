@@ -1,0 +1,46 @@
+language: node_js
+services: xvfb
+
+jobs:
+  include:
+
+    - os: "osx"
+      node_js: "10.19.0"
+      env:
+        - CHROMIUM=true
+      before_install:
+        - PUPPETEER_PRODUCT=firefox npm install
+      script:
+        - ls .local-chromium .local-firefox
+        - npm run tsc
+        - npm run unit
+
+    - os: "windows"
+      node_js: "10.19.0"
+      env:
+        - CHROMIUM=true
+      before_install:
+        - PUPPETEER_PRODUCT=firefox npm install
+      script:
+        - ls .local-chromium .local-firefox
+        - npm run tsc
+        - travis_retry npm run unit
+
+    - node_js: "10.19.0"
+      env:
+        - CHROMIUM=true
+      before_install:
+        - PUPPETEER_PRODUCT=firefox npm install
+      script:
+        - npm run test-install
+        - travis/chromium.sh
+    - node_js: "10.19.0"
+      env:
+        - FIREFOX=true
+      before_install:
+        - PUPPETEER_PRODUCT=firefox npm install
+      script:
+        - npm run funit
+
+notifications:
+  email: false
